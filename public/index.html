@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Shirt Sizing Tool</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>T-Shirt Sizing Tool</h1>
+            <p>Collaborative estimation for your team initiatives</p>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>Create New Board</h2>
+                <form id="createBoardForm">
+                    <div class="form-group">
+                        <label for="boardTitle">Board Title</label>
+                        <input type="text" id="boardTitle" placeholder="Enter board title..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="creatorName">Your Name</label>
+                        <input type="text" id="creatorName" placeholder="Enter your name..." required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Board</button>
+                </form>
+            </div>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <div class="card">
+                <h2>Join Existing Board</h2>
+                <form id="joinBoardForm">
+                    <div class="form-group">
+                        <label for="boardId">Board Number</label>
+                        <input type="text" id="boardId" placeholder="Enter 6-digit board number..." maxlength="6" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="participantName">Your Name</label>
+                        <input type="text" id="participantName" placeholder="Enter your name..." required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Join Board</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div id="successModal" class="modal">
+            <div class="modal-content">
+                <h3>Board Created Successfully!</h3>
+                <p>Your board number is: <strong id="boardNumber"></strong></p>
+                <p>Share this link with your team:</p>
+                <div class="share-link">
+                    <input type="text" id="shareableLink" readonly>
+                    <button id="copyLinkBtn" class="btn btn-small">Copy</button>
+                </div>
+                <div class="modal-actions">
+                    <button id="goToBoardBtn" class="btn btn-primary">Go to Board</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Modal -->
+        <div id="errorModal" class="modal">
+            <div class="modal-content">
+                <h3>Error</h3>
+                <p id="errorMessage"></p>
+                <div class="modal-actions">
+                    <button id="closeErrorBtn" class="btn btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>

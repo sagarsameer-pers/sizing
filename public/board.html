@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Shirt Sizing Board</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div class="board-container">
+        <!-- Header -->
+        <header class="board-header">
+            <div class="board-info">
+                <h1 id="boardTitle">Loading...</h1>
+                <div class="board-meta">
+                    <span>Board #<span id="boardNumber"></span></span>
+                    <span id="participantCount">0 participants</span>
+                </div>
+            </div>
+            <div class="board-actions">
+                <button id="startNewVoteBtn" class="btn btn-primary" style="display: none;">Start New Vote</button>
+                <button id="revealVotesBtn" class="btn btn-success" style="display: none;">Reveal Votes</button>
+            </div>
+        </header>
+
+        <!-- Join Board Modal (shown when not joined) -->
+        <div id="joinBoardModal" class="modal" style="display: flex;">
+            <div class="modal-content">
+                <h3>Join Board</h3>
+                <form id="joinBoardForm">
+                    <div class="form-group">
+                        <label for="participantNameInput">Your Name</label>
+                        <input type="text" id="participantNameInput" placeholder="Enter your name..." required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Join Board</button>
+                </form>
+            </div>
+        </div>
+
+
+
+        <!-- Two Column Layout -->
+        <div class="board-main-container">
+            <!-- Left Column: Participants -->
+            <div class="left-column">
+                <div class="participants-panel">
+                    <div class="participants-header">
+                        <h3>Team Members</h3>
+                        <div class="voting-progress">
+                            <span id="votingProgress">0/0 voted</span>
+                        </div>
+                    </div>
+                    <div id="participantsList" class="participants-list">
+                        <!-- Participants will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Initiatives and Voting -->
+            <div class="right-column">
+                <div class="board-content">
+                    <div id="initiativesList" class="initiatives-list">
+                        <!-- Initiatives will be populated here -->
+                    </div>
+                    
+                    <div id="emptyState" class="empty-state">
+                        <h3>Waiting for voting session</h3>
+                        <p>The board creator will start the voting session when ready.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading">
+            <div class="spinner"></div>
+            <p>Loading board...</p>
+        </div>
+
+        <!-- Error Modal -->
+        <div id="errorModal" class="modal">
+            <div class="modal-content">
+                <h3>Error</h3>
+                <p id="errorMessage"></p>
+                <div class="modal-actions">
+                    <button id="closeErrorBtn" class="btn btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/board.js"></script>
+</body>
+</html>
