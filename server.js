@@ -13,34 +13,45 @@ app.use(express.json());
 
 // CORS configuration for Railway deployment
 app.use((req, res, next) => {
-    const allowedOrigins = [
-        'http://localhost:3000',
-        'https://*.up.railway.app'
-    ];
-    
+    // More permissive CORS for development and Railway deployment
     const origin = req.headers.origin;
-    if (allowedOrigins.some(allowedOrigin => {
-        if (allowedOrigin.includes('*')) {
-            const regex = new RegExp(allowedOrigin.replace('*', '.*'));
-            return regex.test(origin);
-        }
-        return allowedOrigin === origin;
-    })) {
-        res.header('Access-Control-Allow-Origin', origin);
+    
+    // Allow localhost for development and Railway domains for production
+    if (!origin || 
+        origin.includes('localhost') || 
+        origin.includes('127.0.0.1') ||
+        origin.includes('.up.railway.app') ||
+        origin.includes('.railway.app')) {
+        res.header('Access-Control-Allow-Origin', origin || '*');
     }
     
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.header('Access-Control-Allow-Credentials', true);
     
+    // Handle preflight requests
     if (req.method === 'OPTIONS') {
-        res.sendStatus(200);
-    } else {
-        next();
+        return res.status(200).end();
     }
+    
+    next();
 });
 
 app.use(express.static('public'));
+
+// Request logging middleware for debugging
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    next();
+});
+
+// Catch-all for unsupported methods/routes
+app.use('*', (req, res, next) => {
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+    next();
+});
 
 // In-memory storage (in production, use a database)
 const boards = new Map();
