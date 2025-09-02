@@ -85,17 +85,37 @@ npm install
 
 ### Running the Application
 
+**Local Development:**
 ```bash
 npm start
 ```
-
 The application will be available at `http://localhost:3000`
 
-### Development
-
+**Development Mode:**
 ```bash
 npm run dev  # Runs with nodemon for auto-restart
 ```
+
+### Railway Deployment
+
+This application is configured for easy deployment on [Railway](https://railway.app).
+
+**Quick Deploy:**
+1. Fork this repository
+2. Connect your GitHub account to Railway
+3. Create new project from GitHub repo
+4. Railway will automatically deploy using the included `railway.json` configuration
+
+**Manual Deploy:**
+1. Install Railway CLI: `npm install -g @railway/cli`
+2. Login to Railway: `railway login`
+3. Initialize project: `railway init`
+4. Deploy: `railway up`
+
+**Environment Configuration:**
+- `PORT`: Automatically set by Railway
+- `NODE_ENV`: Set to `production` on Railway
+- `HOST`: Set to `0.0.0.0` for Railway compatibility
 
 ### Technologies Used
 

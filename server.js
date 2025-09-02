@@ -10,6 +10,36 @@ const io = socketIo(server);
 
 // Middleware
 app.use(express.json());
+
+// CORS configuration for Railway deployment
+app.use((req, res, next) => {
+    const allowedOrigins = [
+        'http://localhost:3000',
+        'https://*.up.railway.app'
+    ];
+    
+    const origin = req.headers.origin;
+    if (allowedOrigins.some(allowedOrigin => {
+        if (allowedOrigin.includes('*')) {
+            const regex = new RegExp(allowedOrigin.replace('*', '.*'));
+            return regex.test(origin);
+        }
+        return allowedOrigin === origin;
+    })) {
+        res.header('Access-Control-Allow-Origin', origin);
+    }
+    
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Credentials', true);
+    
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
+
 app.use(express.static('public'));
 
 // In-memory storage (in production, use a database)
@@ -328,6 +358,25 @@ io.on('connection', (socket) => {
     });
 });
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'healthy', 
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        version: process.env.npm_package_version || '1.0.0'
+    });
+});
+
+// API status endpoint
+app.get('/api/status', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        boards: boards.size,
+        connections: Array.from(boardSockets.values()).reduce((total, sockets) => total + sockets.size, 0)
+    });
+});
+
 // Serve the main page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -339,6 +388,9 @@ app.get('/board/:boardId', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`T-shirt sizing tool server running on port ${PORT}`);
+const HOST = process.env.HOST || '0.0.0.0';
+
+server.listen(PORT, HOST, () => {
+    console.log(`T-shirt sizing tool server running on ${HOST}:${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
